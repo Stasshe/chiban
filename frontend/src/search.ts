@@ -2,6 +2,7 @@
 // driven forced loading, and address geocoding fallback.
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { geocodeAddress } from "./addressSearch";
+import { findBoundaryBounds } from "./boundaryLayer";
 import { MIN_ZOOM_FOR_PARCELS } from "./mapConfig";
 import { isEntryLoaded, getLoadedFeatureCollections, loadParcelEntry } from "./parcelLayers";
 import type { DataIndex, ParcelProperties } from "./types";
@@ -80,8 +81,16 @@ async function runSearch(map: MapLibreMap, index: DataIndex, query: string): Pro
     return;
   }
 
+  const boundaryBounds = findBoundaryBounds(query);
+  if (boundaryBounds) {
+    map.fitBounds(boundaryBounds, { padding: 64, maxZoom: MIN_ZOOM_FOR_PARCELS + 2, duration: 600 });
+    return;
+  }
+
   const cityMatches = index.entries.filter(
-    (entry) => entry.coordinateSystem === "public" && entry.cityName.includes(query),
+    (entry) =>
+      (entry.coordinateSystem === "public" || entry.coordinateSystem === "approximate") &&
+      entry.cityName.includes(query),
   );
   if (cityMatches.length > 0) {
     await Promise.all(

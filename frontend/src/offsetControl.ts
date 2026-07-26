@@ -39,6 +39,9 @@ interface DragState {
 
 let dragState: DragState | null = null;
 
+let pendingMoveEvent: { map: MapLibreMap; e: MapLayerMouseEvent } | null = null;
+let rafHandle: number | null = null;
+
 /** Degrees-per-click step, computed from the current map center latitude so 1 click ~= 1 meter. */
 function stepDegrees(map: MapLibreMap): { dLat: number; dLon: number } {
   const centerLat = map.getCenter().lat;
@@ -137,10 +140,14 @@ function handleMouseDown(map: MapLibreMap, e: MapLayerMouseEvent): void {
   map.getCanvas().style.cursor = "grabbing";
 }
 
-function handleMouseMove(map: MapLibreMap, e: MapLayerMouseEvent): void {
-  if (!dragState) {
+function applyPendingMove(): void {
+  rafHandle = null;
+  const pending = pendingMoveEvent;
+  pendingMoveEvent = null;
+  if (!pending || !dragState) {
     return;
   }
+  const { map, e } = pending;
   const dLat = e.lngLat.lat - dragState.startLngLat.lat;
   const dLon = e.lngLat.lng - dragState.startLngLat.lng;
   const newOffset: Offset = { dLat: dragState.startOffset.dLat + dLat, dLon: dragState.startOffset.dLon + dLon };
@@ -148,10 +155,25 @@ function handleMouseMove(map: MapLibreMap, e: MapLayerMouseEvent): void {
   refreshOffsetForGroup(map, dragState.groupKey);
 }
 
+function handleMouseMove(map: MapLibreMap, e: MapLayerMouseEvent): void {
+  if (!dragState) {
+    return;
+  }
+  pendingMoveEvent = { map, e };
+  if (rafHandle === null) {
+    rafHandle = requestAnimationFrame(applyPendingMove);
+  }
+}
+
 function handleMouseUp(map: MapLibreMap): void {
   if (!dragState) {
     return;
   }
+  if (rafHandle !== null) {
+    cancelAnimationFrame(rafHandle);
+    rafHandle = null;
+  }
+  pendingMoveEvent = null;
   const finalOffset = getOffset(dragState.groupKey);
   void saveOffsetAbsolute(dragState.groupKey, finalOffset);
   map.dragPan.enable();
