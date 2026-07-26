@@ -13,3 +13,6 @@ __pycache__/
 
 # editors / OS
 .DS_Store
+
+
+public/
