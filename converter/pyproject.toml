@@ -9,6 +9,9 @@ dependencies = [
     # they can be installed. Add them manually once GDAL is available:
     #   uv add "gdal==$(gdal-config --version)"
     #   uv add "mojxml2geojson @ git+https://github.com/digital-go-jp/mojxml2geojson.git"
+    "gdal==3.13.2",
+    "mojxml2geojson",
+    "requests>=2.34.2",
 ]
 
 [project.scripts]
@@ -20,3 +23,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/chiban_converter"]
+
+[tool.uv.sources]
+mojxml2geojson = { git = "https://github.com/digital-go-jp/mojxml2geojson.git" }

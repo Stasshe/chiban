@@ -59,6 +59,37 @@ export function buildParcelLineLayer(entryId: string): LayerSpecification {
   };
 }
 
+/**
+ * Layer builders for "approximate" datasets: arbitrary-coordinate parcels
+ * that georeference.py coarsely aligned via geocoding + translation. Styled
+ * distinctly (blue, dashed outline) from public data so the map communicates
+ * that positions here are approximate, not survey-accurate.
+ */
+export function buildApproximateFillLayer(entryId: string): LayerSpecification {
+  return {
+    id: parcelFillLayerId(entryId),
+    type: "fill",
+    source: parcelSourceId(entryId),
+    paint: {
+      "fill-color": "#3388ff",
+      "fill-opacity": 0.2,
+    },
+  };
+}
+
+export function buildApproximateLineLayer(entryId: string): LayerSpecification {
+  return {
+    id: parcelLineLayerId(entryId),
+    type: "line",
+    source: parcelSourceId(entryId),
+    paint: {
+      "line-color": "#1a5fb4",
+      "line-width": 1.5,
+      "line-dasharray": [2, 2],
+    },
+  };
+}
+
 /** Default initial view: near Tokyo Station, matching the sample dataset. */
 export const INITIAL_CENTER: [number, number] = [139.7671, 35.681];
 export const INITIAL_ZOOM = 16;

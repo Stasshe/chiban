@@ -1,7 +1,7 @@
 // Shared type definitions for the chiban (parcel lookup) frontend.
 
 /** Coordinate system classification of a parcel dataset entry. */
-export type CoordinateSystem = "public" | "arbitrary";
+export type CoordinateSystem = "public" | "approximate" | "arbitrary";
 
 /** Bounding box in [minLon, minLat, maxLon, maxLat] order (WGS84). */
 export type BBox = [number, number, number, number];
@@ -52,4 +52,6 @@ export interface ParcelProperties {
   筆界未定構成筆?: string;
   代表点緯度?: string;
   代表点経度?: string;
+  /** Present only on features that went through the arbitrary-coordinate georeferencing fallback. */
+  位置精度?: string;
 }

@@ -1,6 +1,8 @@
 // Adds/manages GeoJSON parcel sources and fill/line layers on the map.
 import type { Map as MapLibreMap } from "maplibre-gl";
 import {
+  buildApproximateFillLayer,
+  buildApproximateLineLayer,
   buildParcelFillLayer,
   buildParcelLineLayer,
   parcelSourceId,
@@ -54,6 +56,12 @@ export async function loadParcelEntry(map: MapLibreMap, entry: IndexEntry): Prom
     type: "geojson",
     data: geojson,
   });
-  map.addLayer(buildParcelFillLayer(entry.id));
-  map.addLayer(buildParcelLineLayer(entry.id));
+
+  if (entry.coordinateSystem === "approximate") {
+    map.addLayer(buildApproximateFillLayer(entry.id));
+    map.addLayer(buildApproximateLineLayer(entry.id));
+  } else {
+    map.addLayer(buildParcelFillLayer(entry.id));
+    map.addLayer(buildParcelLineLayer(entry.id));
+  }
 }

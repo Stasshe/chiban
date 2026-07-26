@@ -56,7 +56,7 @@ def _build_entry(path: Path, coordinate_system: str) -> dict[str, Any] | None:
     if not city_name:
         city_name = stem
 
-    bbox = _compute_bbox(features) if coordinate_system == "public" else None
+    bbox = _compute_bbox(features) if coordinate_system in ("public", "approximate") else None
 
     return {
         "id": stem,
@@ -81,7 +81,7 @@ def build_index(out_dir: Path) -> None:
         ]
 
     scanned_entries: list[dict[str, Any]] = []
-    for coordinate_system in ("public", "arbitrary"):
+    for coordinate_system in ("public", "approximate", "arbitrary"):
         directory = geojson_root / coordinate_system
         if not directory.is_dir():
             continue

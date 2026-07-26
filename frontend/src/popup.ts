@@ -20,10 +20,14 @@ function buildPopupHtml(properties: ParcelProperties): string {
   const chiban = properties.地番 ?? "(不明)";
   const precision = properties.精度区分 ?? "(不明)";
   const coordinateSystem = properties.座標系 ?? "(不明)";
+  const approximateNote = properties.位置精度
+    ? `<div class="parcel-popup__warning">⚠ 概算位置(自動位置合わせ、境界線は実際とズレる可能性があります)</div>`
+    : "";
 
   return `
     <div class="parcel-popup">
       <div class="parcel-popup__title">地番 ${chiban}</div>
+      ${approximateNote}
       <dl>
         <dt>所在</dt><dd>${address || "(不明)"}</dd>
         <dt>精度区分</dt><dd>${precision}</dd>

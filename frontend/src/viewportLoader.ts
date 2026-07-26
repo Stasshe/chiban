@@ -10,14 +10,16 @@ function currentViewportBBox(map: MapLibreMap): BBox {
   return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
 }
 
-/** Loads any public-coordinate entries that intersect the current viewport and aren't loaded yet. */
+/** Loads any public/approximate entries (i.e. ones with a usable bbox) that intersect the current viewport and aren't loaded yet. */
 async function loadVisibleEntries(map: MapLibreMap, index: DataIndex): Promise<void> {
   if (map.getZoom() < MIN_ZOOM_FOR_PARCELS) {
     return;
   }
-  const publicEntries = index.entries.filter((entry) => entry.coordinateSystem === "public");
+  const displayableEntries = index.entries.filter(
+    (entry) => entry.coordinateSystem === "public" || entry.coordinateSystem === "approximate",
+  );
   const viewport = currentViewportBBox(map);
-  const visible = entriesInViewport(publicEntries, viewport);
+  const visible = entriesInViewport(displayableEntries, viewport);
 
   await Promise.all(
     visible
