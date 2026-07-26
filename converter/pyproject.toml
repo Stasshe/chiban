@@ -1,0 +1,22 @@
+[project]
+name = "chiban-converter"
+version = "0.1.0"
+description = "Pipeline that converts Horei-sho chizu XML (登記所備付地図データ) into GeoJSON for the chiban viewer."
+requires-python = ">=3.11"
+dependencies = [
+    # GDAL and mojxml2geojson are NOT declared here: they require a system
+    # libgdal matching version (see README.md GDAL setup section) before
+    # they can be installed. Add them manually once GDAL is available:
+    #   uv add "gdal==$(gdal-config --version)"
+    #   uv add "mojxml2geojson @ git+https://github.com/digital-go-jp/mojxml2geojson.git"
+]
+
+[project.scripts]
+chiban-convert = "chiban_converter.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/chiban_converter"]

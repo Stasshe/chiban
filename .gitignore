@@ -1,0 +1,15 @@
+# frontend (Vite + npm)
+frontend/node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+
+# converter (Python + uv)
+converter/.venv/
+converter/raw/**/*.zip
+converter/raw/**/extracted/
+!converter/raw/.gitkeep
+__pycache__/
+*.pyc
+
+# editors / OS
+.DS_Store

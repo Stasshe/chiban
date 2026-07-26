@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>地番調査</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div id="search-panel">
+      <input id="search-input" type="text" placeholder="住所または地番で検索" />
+    </div>
+
+    <div id="attribution-note">
+      背景写真: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a>
+      / 地番データ: 法務省登記所備付地図データ
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

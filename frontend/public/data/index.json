@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-07-26T00:00:00Z",
+  "entries": [
+    {
+      "id": "00000_sample",
+      "cityCode": "00000",
+      "cityName": "サンプル(動作確認用)",
+      "coordinateSystem": "public",
+      "file": "geojson/public/00000_sample.geojson",
+      "featureCount": 4,
+      "bbox": [139.7665, 35.6805, 139.7685, 35.6815]
+    }
+  ]
+}
