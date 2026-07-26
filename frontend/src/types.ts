@@ -23,6 +23,19 @@ export interface DataIndex {
   entries: IndexEntry[];
 }
 
+/** One entry of frontend/public/data/boundaries/index.json, describing a single administrative-boundary GeoJSON file. */
+export interface BoundaryIndexEntry {
+  cityCode: string;
+  cityName: string;
+  file: string;
+  bbox: BBox | null;
+}
+
+/** Top-level structure of frontend/public/data/boundaries/index.json. */
+export interface BoundaryIndex {
+  entries: BoundaryIndexEntry[];
+}
+
 /**
  * Properties present on parcel features produced by mojxml2geojson.
  * Chime (地目 / land category) is intentionally absent: the source

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from . import boundaries as boundaries_module
 from . import build_index as build_index_module
 from . import convert as convert_module
 from . import extract as extract_module
@@ -63,6 +64,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--force", action="store_true", help="reconvert even if a .geojson output already exists"
     )
 
+    boundaries_parser = subparsers.add_parser(
+        "boundaries",
+        help="convert raw/boundaries/<city_code>.zip shapefiles into frontend/public/data/boundaries + index.json",
+    )
+    _add_common_args(boundaries_parser)
+
     return parser
 
 
@@ -83,6 +90,9 @@ def main() -> None:
         convert_module.convert_all(args.raw_dir, force=args.force)
         merge_module.merge_all(args.raw_dir, args.out_dir)
         build_index_module.build_index(args.out_dir)
+    elif args.command == "boundaries":
+        boundaries_module.convert_all_boundaries(args.raw_dir, args.out_dir)
+        boundaries_module.build_boundaries_index(args.out_dir)
 
 
 if __name__ == "__main__":

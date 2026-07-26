@@ -1,6 +1,8 @@
 // Click handling: shows a popup with parcel details (地番/所在/精度区分/座標系).
 import { Popup, type Map as MapLibreMap, type MapMouseEvent } from "maplibre-gl";
 import { PARCEL_FILL_LAYER_PREFIX } from "./mapConfig";
+import { setActiveGroup } from "./offsetControl";
+import { groupKeyOf } from "./offsetStore";
 import type { ParcelProperties } from "./types";
 
 /** Joins the address hierarchy fields (市区町村名 down to 予備名) into one string. */
@@ -53,6 +55,12 @@ export function setupPopupHandler(map: MapLibreMap): void {
       .setLngLat(event.lngLat)
       .setHTML(buildPopupHtml(properties))
       .addTo(map);
+
+    // Only "approximate" parcels (auto-georeferenced, carrying 位置精度) can
+    // be manually nudged; survey-accurate public data has no such offset.
+    if (properties.位置精度) {
+      setActiveGroup(groupKeyOf(properties), formatAddress(properties), map);
+    }
   });
 
   map.on("mousemove", (event: MapMouseEvent) => {

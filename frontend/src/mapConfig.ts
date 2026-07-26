@@ -90,6 +90,36 @@ export function buildApproximateLineLayer(entryId: string): LayerSpecification {
   };
 }
 
+/** Prefix used for per-municipality administrative-boundary (chome-level) source/layer ids. */
+export const BOUNDARY_SOURCE_PREFIX = "boundary-source-";
+export const BOUNDARY_LINE_LAYER_PREFIX = "boundary-line-";
+
+export function boundarySourceId(cityCode: string): string {
+  return `${BOUNDARY_SOURCE_PREFIX}${cityCode}`;
+}
+
+export function boundaryLineLayerId(cityCode: string): string {
+  return `${BOUNDARY_LINE_LAYER_PREFIX}${cityCode}`;
+}
+
+/**
+ * Administrative boundary (chome/oaza level) line layer, sourced from e-Stat
+ * small-area census boundaries. Line-only, styled to stay visually distinct
+ * from parcel outlines (orange/blue) and the aerial photo basemap.
+ */
+export function buildBoundaryLineLayer(cityCode: string): LayerSpecification {
+  return {
+    id: boundaryLineLayerId(cityCode),
+    type: "line",
+    source: boundarySourceId(cityCode),
+    paint: {
+      "line-color": "#ffe066",
+      "line-width": 2,
+      "line-opacity": 0.85,
+    },
+  };
+}
+
 /** Default initial view: near Tokyo Station, matching the sample dataset. */
 export const INITIAL_CENTER: [number, number] = [139.7671, 35.681];
 export const INITIAL_ZOOM = 16;
