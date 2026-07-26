@@ -37,7 +37,7 @@ async function main(): Promise<void> {
   map.addControl(new NavigationControl(), "top-right");
 
   setupPopupHandler(map);
-  setupOffsetControl();
+  setupOffsetControl(map);
 
   const indexPromise = loadDataIndex();
   const offsetsPromise = loadOffsets();

@@ -89,6 +89,33 @@ export function applyOffsetToFeatureCollection(fc: GeoJSON.FeatureCollection): G
   };
 }
 
+/** Sets a group's offset in memory to an absolute value, without persisting. */
+export function setOffsetInMemory(groupKey: string, offset: Offset): void {
+  offsets.set(groupKey, offset);
+}
+
+/**
+ * Sets a group's offset in memory to an absolute value and persists it.
+ * Mirrors adjustOffset's save behavior: errors are logged but the
+ * in-memory (visual) state is left updated so the UI never blocks on the save.
+ */
+export async function saveOffsetAbsolute(groupKey: string, offset: Offset): Promise<void> {
+  offsets.set(groupKey, offset);
+
+  try {
+    const response = await fetch("/api/offsets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ groupKey, dLat: offset.dLat, dLon: offset.dLon }),
+    });
+    if (!response.ok) {
+      throw new Error(`Save failed: ${response.status}`);
+    }
+  } catch (error) {
+    console.error(`Failed to persist offset for group "${groupKey}":`, error);
+  }
+}
+
 /**
  * Adds the given delta to a group's saved offset and persists the result.
  * The in-memory map is updated immediately; if the network save fails, the
